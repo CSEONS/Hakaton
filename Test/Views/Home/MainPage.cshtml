@@ -1,0 +1,105 @@
+﻿@model Infrastructure
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=b9668241-f0dd-44df-b84d-6c53dcb2dfd4&lang=ru_RU" type="text/javascript"></script>
+    <link rel="stylesheet" href="~/site.css">
+</head>
+<body>
+    <div id="header">
+        <div class="logo">
+            <a href="1 - Главная.html">
+                G<span class="orange">Guide</span>
+            </a>
+        </div>
+    </div>
+    <div id="map" style="width: 749px; height: 965px;"></div>
+    <p class="punkt">
+        Выберите пункты назначения
+    </p>
+    <div class="choice_roditel">
+        <div class="choice_1">
+            <a href="" onclick="test3()">
+                Достопримечательности
+            </a>
+        </div>
+        <div class="choice_2">
+            <a href="" onclick="test2()">
+                Рестораны
+            </a>
+        </div>
+        <div class="choice_3">
+            <a href="" onclick="test1()">
+                Отели
+            </a>
+        </div>
+    </div>
+    <div class="section">
+        <div class="container">
+            <div class="catalog">
+                <div class="catalog__flex">
+                    @{
+                        for (int i = 0; i < Model.Hotel.Count; i++)
+                        {
+                            <div class="catalog__col">
+                                <div class="catalog__card card">
+                                    <div class="card__title">@Model.Hotel[i].Name</div>
+                                    <img src="@Model.Hotel[i].ImageURL" card__text alt="">
+                                    <div class="card__button"><a class="click">Button</a></div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        ymaps.ready(init);
+        let myMap;
+        let multiRoute;
+
+        function init() {
+            // Создание карты.
+            myMap = new ymaps.Map("map",
+                {
+                    center: [43.25, 45.83333],
+                    zoom: 7,
+                    controls: []
+                });
+        }
+
+        function test1(){
+            AddNewRoute(["Чечня, Отель Грозный Сити", "Чечня, Гостиница Терек", "Чечня, Отель Парма"])
+        }
+
+        function test2(){
+            AddNewRoute(["Чечня, Глобус", "Чечня, Парадайз", "Чечня, Криспи"])
+        }
+
+        function test3(){
+            AddNewRoute(["Чечня, Лестница в небеса", "Чечня, Кезиной"])
+        }
+
+        function AddNewRoute(punkts) {
+
+            if (myMap.geoObjects.remove)
+                myMap.geoObjects.remove(multiRoute)
+
+            multiRoute = new ymaps.multiRouter.MultiRoute({
+                referencePoints: punkts,
+
+                params: {
+                    routingMode: "pedestrian"
+                }
+            }, {
+                boundsAutoApply: true
+            });
+
+            myMap.geoObjects.add(multiRoute);
+        }
+    </script>
+</body>
+</html>

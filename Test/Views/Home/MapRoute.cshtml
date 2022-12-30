@@ -1,0 +1,50 @@
+﻿@model Infrastructure
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=8ca1d2b8-1040-4823-85e7-af0019011efb&lang=ru_RU" type="text/javascript">
+    </script>
+</head>
+<body>
+    <form method="post" action="~/Home/MapRoute" class="form_hider">
+        <input type="text" name="Infrastructures" style="height: 0px; opacity: 0;"><br />
+        <input type="submit" value="Отправить" />
+    </form>
+    <div id="map" style="width: 450px; height: 450px;"></div>
+    <script src="~/js/site.js"></script>
+    <script>
+        ymaps.ready(init);
+        let myMap;
+        let multiRoute;
+
+        function init() {
+            // Создание карты.
+            myMap = new ymaps.Map("map",
+                {
+                    center: [59.93772, 30.313622],
+                    zoom: 7,
+                    controls: []
+                });
+        }
+
+        function AddNewRoute(punkts) {
+
+            myMap.geoObjects.remove(multiRoute)
+
+            multiRoute = new ymaps.multiRouter.MultiRoute({
+                referencePoints: punkts,
+
+                params: {
+                    routingMode: "pedestrian"
+                }
+            }, {
+                boundsAutoApply: true
+            });
+
+            myMap.geoObjects.add(multiRoute);
+        }
+    </script>
+</body>
+</html>
